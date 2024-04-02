@@ -3,8 +3,11 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import "./globals.css"
 import React, { useState, useEffect } from "react";
+import { getDictionaryData } from "..\apiCalls\dictionary.jsx";
 
-export default function Home() {
+export default async function Home() {
+
+  const dictionaryData = await getDictionaryData()
 
  return(
     <div className="container">
