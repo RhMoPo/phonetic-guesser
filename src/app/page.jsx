@@ -1,54 +1,52 @@
-"use client";
-import Image from "next/image";
-import styles from "./page.module.css";
-import "./globals.css"
+"use client"
 import React, { useState, useEffect } from "react";
-import { getDictionaryData } from "..\apiCalls\dictionary.jsx";
+import { getDictionaryData } from "./apiCalls/dictionary.js"; // Make sure the path is correct
 
-export default async function Home() {
+export default function Home() {
+  const [refinedData, setRefinedData] = useState(null); // Starting with null or an appropriate default state
 
-  const dictionaryData = await getDictionaryData()
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getDictionaryData(); // This is an async call
+        console.log("Fetched data:", data); // Logging to see the fetched data
+        setRefinedData(data); // Update state with the fetched data
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    }
 
- return(
+    fetchData();
+  }, []); // Dependency array is empty, so this effect runs once on mount
+
+  return (
     <div className="container">
-       <img className="exampleImg" src="example.png" alt="Example"></img>
-       <div className="inputSection">
+      <img className="exampleImg" src="example.png" alt="Example" />
+      <div className="inputSection">
         <form className="userInput">
-            <input type="text" id="userAnswer" placeholder="Use the phonetic to guess the word..." />
-            <button id="submitBTN">Guess</button>
+          <input
+            type="text"
+            id="userAnswer"
+            placeholder="Use the phonetic to guess the word..."
+          />
+          <button type="button" id="submitBTN">Guess</button>
         </form>
-          <button id="hintBTN" style={{ marginLeft: '10px' }}>Hint?</button>
-       </div>
-   </div>
- )
+        {refinedData && (
+          <>
+            <button id="hintBTN" style={{ marginLeft: '10px' }}>Hint?</button>
+            <div>
+              <p>Word: {refinedData.word}</p>
+              <p>Phonetic: {refinedData.phonetic}</p>
+              <div>
+                Definitions:
+                {refinedData.definition.map((def, index) => (
+                  <p key={index}>{def}</p>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
-
-
-
-
-
-
-
-//           <input type="text" id="userAnswer" placeholder="Use the phonetic to guess the word..." value={userAnswer} onChange={handleInputChange}/>
-//           <button id="submitBTN" onClick={handleGuess}>Guess</button>
-//       {refinedData.length > 0 && (
-//         <button id="hintBTN" onClick={toggleHints} style={{ marginLeft: '10px' }}>Hint?</button>
-//       )}
-//     </div>
-//     {phoneticsData && (
-//       <div className="phonetics" id="phoneticsOutput">
-//         <p>{phoneticsData}</p>
-//       </div>                                                            
-//     )}
-//     {showHints && refinedData.length > 0 && (
-//       <div className="hintsContainer">
-//         {refinedData[0].definitions.slice(0, 3).map((definition, index) => (
-//           <div key={index} className="hint">
-//             {definition}
-//           </div>
-//         ))}
-//       </div>
-//     )}
-//   </div>
-// );
-// }
