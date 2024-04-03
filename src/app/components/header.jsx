@@ -3,7 +3,7 @@ import "./header.css";
 export const Header = () => {
     return (
         <header>
-            <p>Phonetic Guesser</p>
+            <p>Phðnətic Gʊəssər</p>
         </header>
     );
 };

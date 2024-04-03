@@ -9,11 +9,13 @@ export async function getDictionaryData(){
         const data = await response.json();
         if (!data[0] || !data[0].phonetics || !data[0].phonetics.length) {              //<=assess if all 'if' parameters are required
             throw new Error("Phonetic data is missing or empty...");
+            getDictionaryData()
         }
         //Find phonetic
         const phonetic = data[0].phonetic.find(p => p.text)?.text;          //Possibility to change to map later
         if (!phonetic) {
             throw new Error ("Phonetic not found...")
+            getDictionaryData()
         }
 
         //Find definition - iterates over all keys called "meanings" to find meanings.definitions and then maps over meanings.definitions to find and create an array of all meanings.definitions.definition. 

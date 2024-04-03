@@ -9,12 +9,13 @@ export default function Home() {
     async function fetchData() {
       try {
         const data = await getDictionaryData(); // This is an async call
-        console.log("Fetched data:", data); // Logging to see the fetched data
         setRefinedData(data); // Update state with the fetched data
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
     }
+    
+    console.log(refinedData); // Logging to see the fetched data
 
     fetchData();
   }, []); // Dependency array is empty, so this effect runs once on mount
