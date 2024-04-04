@@ -41,6 +41,7 @@
 
 //           const dictionaryData = {            // destructure in future
 //             word: randomWord,
+
 //             phonetic: phonetic,
 //             definition: definitions,
 //        }
@@ -64,17 +65,20 @@ async function fetchRandomWord() {
         const data = await response.json();
         return data[0]; // Returns the first word in the response
     } catch (error) {
-        console.error("fetchRandomWord error:", error.message);
-        // Retry fetching a random word
-        return fetchRandomWord();
+        console.error("fetchRandomWord error:", error.message); 
     }
 }
 // Fetches dictionary data for a given word
-async function fetchDictionaryData(word) {
+async function fetchDictionaryData() {
     try {
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        const randomWord = await fetchRandomWord();
+        const response = await fetch(
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${randomWord}`
+        );
         if (!response.ok) {
-            throw new Error(`Failed to fetch the dictionary API for word: ${word}`);
+            throw new Error(
+              `Failed to fetch the dictionary API for word: ${randomWord}`
+            );
         }
         const data = await response.json();
         // Ensure the data includes phonetics and meanings
@@ -82,18 +86,21 @@ async function fetchDictionaryData(word) {
             throw new Error("Required data is missing from the dictionary response");
         }
         const phonetic = data[0].phonetics.find(p => p.text)?.text || "";
-        const definitions = data[0].meanings.flatMap(meaning => meaning.definitions.map(def => def.definition));
-        return { word, phonetic, definitions };
+            const definitions = data[0].meanings.map(meaning =>
+            meaning.definitions.map(def => def.definition)
+        ).flat();
+        console.log(definitions);
+        return { randomWord, phonetic, definitions };
     } catch (error) {
         console.error("fetchDictionaryData error:", error.message);
         // Retry fetching dictionary data for the same word
-        return fetchDictionaryData(word);
+        // return fetchDictionaryData();
     }
 }
 // Function to initiate the process
-async function getDictionaryData() {
-    const randomWord = await fetchRandomWord(); // This will keep retrying until successful
-    return await fetchDictionaryData(randomWord); // This will keep retrying until successful
-}
+// async function getDictionaryData() {
+//     const randomWord = await fetchRandomWord(); // This will keep retrying until successful
+//     return await fetchDictionaryData(randomWord); // This will keep retrying until successful
+// }
 // Example usage
-getDictionaryData().then(data => console.log(data)).catch(error => console.error(error));
+// getDictionaryData().then(data => console.log(data)).catch(error => console.error(error));

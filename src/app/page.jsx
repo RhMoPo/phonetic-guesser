@@ -1,14 +1,14 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { getDictionaryData } from "./apiCalls/api.js"; // Make sure the path is correct
+import { fetchDictionaryData } from "./apiCalls/api.js"
 
 export default function Home() {
-  const [refinedData, setRefinedData] = useState(null); // Starting with null or an appropriate default state
-
+  const [refinedData, setRefinedData] = useState([]); // Starting with null or an appropriate default state
+console.log(refinedData)
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await getDictionaryData(); // This is an async call
+        const data = await fetchDictionaryData(); // This is an async call
         console.log("Fetched data:", data); // Logging to see the fetched data
         setRefinedData(data); // Update state with the fetched data
       } catch (error) {
@@ -16,7 +16,9 @@ export default function Home() {
       }
     }
 
-    fetchData();
+    while (refinedData.length === 0){
+    fetchData()
+  };
   }, []); // Dependency array is empty, so this effect runs once on mount
 
   return (
@@ -38,10 +40,10 @@ export default function Home() {
               <p>Word: {refinedData.word}</p>
               <p>Phonetic: {refinedData.phonetic}</p>
               <div>
-                Definitions:
+                {/* Definitions:
                 {refinedData.definition.map((def, index) => (
                   <p key={index}>{def}</p>
-                ))}
+                ))} */}
               </div>
             </div>
           </>
