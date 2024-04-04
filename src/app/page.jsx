@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { getDictionaryData } from "./apiCalls/dictionary.js"; // Make sure the path is correct
+import { getDictionaryData } from "./apiCalls/api.js"; // Make sure the path is correct
 
 export default function Home() {
   const [refinedData, setRefinedData] = useState(null); // Starting with null or an appropriate default state
